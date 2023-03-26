@@ -40,6 +40,7 @@ Milestone 1: The OG ERD
    <summary>
   Squirrel Data Table
   </summary>
+  Testing testing do I work?
   </details>
   
   <details>
@@ -54,7 +55,12 @@ Milestone 2: Normalization
   
   ![normalsqrls](https://user-images.githubusercontent.com/128807596/227696480-e0c1d53c-51d9-40b8-ab41-5d5f6e1d27a7.jpeg)
 
-  
+  <details>
+   <summary>
+  Boroughs Table
+  </summary>
+  </details>
+
   <details>
    <summary>
   Conditions Park Table
@@ -84,29 +90,106 @@ Milestone 2: Normalization
         order by
           honeydew;
 
-        DELETE FROM conditions WHERE condition_id = '0';
+        DELETE FROM conditions WHERE condition_id = '0'; --verified 3.26.23
      ~~~~
   
 </details>
 
-<d
-   etails>
+<details>
+   <summary>
+  Squirrel Data Table
+  </summary>
+</details>
+
+<details>
    <summary>
   New York City Parks Table
   </summary>
+</details>
+
+ <details>
+   <summary>
+  Litter Data Table
+  </summary>
+  
+  ~~~~ postgresql
+  -- Creating table
+  create table litter(
+"litter_id" character(1),
+"name" character varying(10),
+primary key("litter_id")
+);
+  
+insert into litter(name, 
+	litter_id)
+select
+	distinct split_part(litter, ',',1), -- spliting qualitative data into categorical qualitative data
+	case
+		when park_data.litter ~'None' then '1'
+		when park_data.litter ~ 'Some' then '2'
+		when park_data.litter ~'Abundant' then '3'
+		else '0'
+	end as pineapple
+from park_data
+where park_data.litter is not null
+order by
+	pineapple;
+  
+  ~~~~
+  
+  </details>
+  
+   <details> 
+   <summary>
+  Outings Data Table
+  </summary>
+  
+  
+  </details>
+  
+ <details>
+   <summary>
+  Permits Data Table
+  </summary>
+
+  ~~~~postgresql
+  --Create the table
+  CREATE TABLE "permits" (
+  "permit_id" SERIAL,
+  "permit" boolean,
+  "district" character varying(20),
+  "parent" character varying(20),
+  PRIMARY KEY ("permit_id")
+);
+ -- Insert data into table
+insert into permits (
+	permit,
+	district,
+	parent)
+select 
+		case
+			when permit = 'Y' then 1 :: boolean --convert into boolean
+			when permit = 'N' then 0 :: boolean
+		end,
+	permitdist,
+	permitpare
+from nyc_parks1;
+  ~~~~
+  
   </details>
   
   <details>
+   <summary>
+  Sighters Table
+  </summary>
+  </details>
+  
+ <details>
    <summary>
   Squirrel Data Table
   </summary>
   </details>
   
-  <details>
-   <summary>
-  Squirrel Sightings Table
-  </summary>
-  </details>
  <h2 style="text-align: center;">
 Milestone 3: The Script
   
