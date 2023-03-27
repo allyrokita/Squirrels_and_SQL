@@ -323,6 +323,62 @@ Milestone 2: Normalization
 
 <details>
    <summary>
+  Jurisdiction Table
+  </summary>
+	
+	~~~~postgresql
+	
+	CREATE TABLE "jurisdictions" (
+  		"id" serial,
+  		"name" character varying(20),
+  		PRIMARY KEY ("id")
+		);
+
+
+	
+	INSERT INTO jurisdictions(name)
+	SELECT DISTINCT SPLIT_PART(UPPER(UNNEST((STRING_TO_ARRAY(jurisdicti  ,'/')))), ',',1)
+	FROM nyc_parks1
+	WHERE jurisdicti NOT LIKE '%?%' AND jurisdicti NOT LIKE '%Authority%';
+                      ^
+	SELECT * FROM jurisdictions;
+	
+	~~~~
+ id |      name
+----|----------------
+  1 | DCAS
+  2 | DSBS
+  3 | NYPD
+  4 | MTA
+  5 | BORO PRES.
+  6 | TRANSIT
+  7 | NYCHA
+  8 | FEDERAL
+  9 | CULT
+ 10 | DBS
+ 11 | SDOT
+ 12 | DEP
+ 13 | EDC
+ 14 | LINCOLN CENTER
+ 15 | CDOT
+ 16 | SBS
+ 17 | BBPC
+ 18 | DOE
+ 19 | DPR
+ 20 | DOT
+ 21 | TBTA
+ 22 | NPS
+ 23 | UNKNOWN
+ 24 | PRIVATE
+ 25 | HPD
+
+	
+	~~~~
+	
+</details>
+
+<details>
+   <summary>
   Squirrel Data Table
   </summary>
 </details>
@@ -465,9 +521,28 @@ from nyc_parks1;
 	FROM nyc_parks1;
 	
 	~~~~
-	
   </details>
   
+  
+   <details>
+   <summary>
+  Zipcode Table
+  </summary>
+	
+	~~~~postgresql
+	 CREATE TABLE "zipcodes" (
+  		"zipcode" character(5),
+  		"park_id" character varying(15)		,
+  		PRIMARY KEY ("zipcode")
+		);
+
+
+		INSERT INTO zipcodes(zipcode) SELECT DISTINCT  ltrim(unnest(string_to_array(zipcode, ',')))
+			FROM nyc_parks1
+			WHEERE LENGTH(zipcode) = 5 ;
+	
+	~~~~
+  </details>
   
  <h2 style="text-align: center;">
 Milestone 3: The Script
