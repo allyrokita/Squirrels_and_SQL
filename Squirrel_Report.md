@@ -11,7 +11,7 @@ ring on block on which the squirrel is seated, and by fantastic bird."
 Milestone 1: The Data
   </h2>
 <details> 
-<summary> Summary of Relations </summary>
+	<summary> <h3> Summary of Relations </h3> </summary>
   
    ![nonnormal_sqrls](https://user-images.githubusercontent.com/128807596/227696298-2d604427-2e74-406a-a6fb-908a03449831.jpeg)
   
@@ -23,8 +23,23 @@ Milestone 1: The Data
 
 <details>
    <summary>
-  Park Data Table
+	   Park Data Table
   </summary>
+	
+	     area_name     | area_id |                  park_name                   | park_id | start_time |  end_time  | total_time |                          park_condition                          |                           other_animal_sighting                            |                              litter                               |          temp_and_weather          | squirrel_count | squirrel_sighter | sighter_count |    date
+	-------------------|---------|----------------------------------------------|---------|------------|------------|------------|------------------------------------------------------------------|----------------------------------------------------------------------------|-------------------------------------------------------------------|------------------------------------|----------------|------------------|---------------|------------
+	 UPPER MANHATTAN   | A       | Fort Tryon Park                              |       1 | 3:14:00 PM | 4:05:00 PM |         51 | Busy                                                             | Humans, Dogs, Pigeons, Cardinals                                           | Some                                                              | 43 degrees, sunny                  |             12 | 01, 02, 03, 04   |             4 | 2020-03-01
+	 UPPER MANHATTAN   | A       | J. Hood Wright Park                          |       2 | 3:30:00 PM | 4:00:00 PM |         30 | Calm                                                             | Humans, Hawks, Dogs, Pigeons, Rat                                          | Some, in trees                                                    | cold, clear                        |             24 | 05, 06           |             2 | 2020-03-01
+	 UPPER MANHATTAN   | A       | Highbridge Park                              |       3 | 3:21:00 PM | 4:15:00 PM |         54 | Calm, pick-up baseball game                                      | Humans, Dogs (3, all on leashes), Downy Woodpecker (2), Robins, Song Birds | Some, especially caught in wooded area in East, balloons in trees | 43 degrees                         |             16 | 07, 08, 09       |             3 | 2020-03-01
+	 UPPER MANHATTAN   | A       | St. Nicholas Park                            |       4 | 3:15:00 PM | 3:45:00 PM |         30 | Calm                                                             | Humans, Dogs                                                               | Some, backside of park                                            | 43 degrees, clear                  |             15 | 10, 11, 12       |             3 | 2020-03-01
+	 UPPER MANHATTAN   | A       | Riverside Park (section near Grant Memorial) |       5 | 3:15:00 PM | 3:45:00 PM |         30 | Calm                                                             | Humans, Dogs                                                               |                                                                   |                                    |             28 | 13, 14, 15       |             3 | 2020-03-01
+	 UPPER MANHATTAN   | A       | Marcus Garvey Park                           |       6 | 3:45:00 PM | 4:15:00 PM |         30 | Calm, re: humans, but a hawk is certainly not a calming presence | Hawks, Dogs, Pigeons                                                       | Abundant                                                          | 42 degrees, clear                  |             34 | 16               |             1 | 2020-03-01
+	 CENTRAL MANHATTAN | B       | Madison Square Park                          |       7 | 2:30:00 PM | 3:50:00 PM |         80 | Busy                                                             | Humans, Dogs, Pigeons                                                      |                                                                   | 43 degrees, sunny                  |             11 | 17, 18, 19, 20   |             4 | 2020-03-01
+	 CENTRAL MANHATTAN | B       | Union Square Park                            |       8 | 3:15:00 PM | 3:45:00 PM |         30 | Busy                                                             | Humans, Dogs, Pigeons                                                      |                                                                   | 40 degrees, sunny                  |             16 | 21, 22, 23, 24   |             4 | 2020-03-01
+	 CENTRAL MANHATTAN | B       | Stuyvesant Square Park                       |       9 | 3:00:00 PM | 4:00:00 PM |         60 | Calm, 20èùû30 ppl on each side                                   | Humans, Dogs, Sparrows                                                     | Some                                                              | 45 degrees, sunny                  |             25 | 25, 26           |             2 | 2020-03-01
+	 CENTRAL MANHATTAN | B       | Washington Square Park                       |      10 | 3:20:00 PM | 4:00:00 PM |         40 | Busy                                                             | Humans, Dogs                                                               | None                                                              | 45 degrees, sunny with shade spots |             51 | 27, 28           |             2 | 2020-03-01
+
+	
 	
 Park Data is a non-geocoded dataset articulates the state in which the parks were in when observing the squirrels. It contains the
 	area name (e.i Upper Manhattan, Lower Manhattan) as well as the area’s ID. Next, it details the parks’ names and a park ID that
@@ -41,7 +56,17 @@ Park Data is a non-geocoded dataset articulates the state in which the parks wer
    <summary>
   New York City Parks Table
   </summary>
-
+	
+ gid |      acquisitio      |               acres               |        address        | borough | class |      commission      | communityb | councildis | department |               eapply                |             gisobjid              | gispropnum |               global_id                | jurisdicti |                           location                            | mapped |             name311             | nys_assemb | nys_senate |             objectid              | omppropid | parentid | permit | permitdist | permitpare | pip_ratabl | precinct | retired |            signname             |         subcategor         |         typecatego          |                   url                   | us_congres | waterfront | zipcode |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         geom                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+-----|----------------------|-----------------------------------|-----------------------|---------|-------|----------------------|------------|------------|------------|-------------------------------------|-----------------------------------|------------|----------------------------------------|------------|---------------------------------------------------------------|--------|---------------------------------|------------|------------|-----------------------------------|-----------|----------|--------|------------|------------|------------|----------|---------|---------------------------------|----------------------------|-----------------------------|-----------------------------------------|------------|------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   1 | 19990222000000.00000 | 20.907000000000000000000000000000 |                       | R       | PARK  | 20100106000000.00000 | 503        | 51         | R-03       | Seaside Wildlife Nature Park        | 100005021.00000000000000000000000 | R145       | {EC14E5C9-9687-49BC-9A7A-77F977DC0448} | DPR        | Nelson Ave., Tennyson Dr. and Bulkhead Line                   | True   | Seaside Wildlife Nature Park    | 64         | 24         | 6367.0000000000000000000000000000 | R145      | R-03     | Y      | R-03       | R-03       | Yes        | 122      | False   | Seaside Wildlife Nature Park    | Neighborhood Park          | Neighborhood Park           | http://www.nycgovparks.org/parks/R145/  | 11         | Yes        | 10308   | 0106000000020000000103000000010000001E00000020BB0B011B8952C09B3CE9AE6645444054E65C81198952C0A2041A896445444014B2B64D198952C0BE2C07DD64454440CDBBBB1D088952C0A1EBD73B4C454440C851898E088952C03D138D844B4544403481AC9D078952C052E704F64545444055219A7AF98852C0358C0A603345444025E96FDEFD8852C00F4085640C454440059E5A1FFA8852C02AC9CD43F64444403DB1EDEBFE8852C0E868FF9AD94444404F3917FA1D8952C05CF0067F0245444052D7AFDB278952C042EF12E711454440A2053D1F298952C01FE4EE03104544403E5BC4872C8952C09DC06854154544409F2EDAA02C8952C0A44F3F472845444095D39C932C8952C05AC64C9A2C454440C3087B602C8952C07ACCC7EA30454440B9AD98072C8952C05C9BAE353545444020FB32892B8952C0E86BFD7739454440850FA3E52A8952C09AFEBBAE3D4544401C655B1D2A8952C0D3CFF7D641454440E38DE630298952C0DD07C6ED454544406348EC20288952C014234DF049454440779E28EE268952C0743BBDDB4D4544405B3E7299258952C0F0AF59AD51454440EB35B923248952C04D36776255454440479C008E228952C050DF7BF858454440F52E66D9208952C054CEE66C5C454440177219071F8952C0FE4F4EBD5F45444020BB0B011B8952C09B3CE9AE664544400103000000010000000A000000E7048C3D318952C06A2E1FB12845444053380085318952C0F5E137381D45444010999917348952C08D77C54921454440A5878589378952C0DBC878BC2645444084A4B0C6348952C00B6593E32A4544402DAFE91C358952C0DBB879742B454440861F5A19328952C05ACE4BC22F4544405EC06B03318952C0CF2FE5192E4544406DA39326318952C0A0F519662B454440E7048C3D318952C06A2E1FB128454440
+   2 | 19530514000000.00000 | 0.0610000000000000000000000000000 |                       | Q       | PARK  | 20090423000000.00000 | 401        | 22         | Q-01       | Strippoli Square                    | 100000375.00000000000000000000000 | Q355       | {62700020-4840-4F4A-A15A-7D65B9A6A794} | DPR        | 31 Ave., 51 St., 54 St.                                       | True   | Strippoli Square                | 30         | 12         | 5916.0000000000000000000000000000 | Q355      | Q-01     | Y      | Q-01       | Q-01       | Yes        | 114      | False   | Strippoli Square                | Sitting Area/Triangle/Mall | Triangle/Plaza              | http://www.nycgovparks.org/parks/Q355/  | 14         | No         | 11377   | 010600000001000000010300000001000000050000003A4E583E147A52C0F972574CE8604440810D706C177A52C0C64020BAE76044404E1E58AC157A52C091A2C10EF160444036735424157A52C0E1D5CD2DF16044403A4E583E147A52C0F972574CE8604440
+   3 | 19400528000000.00000 | 1.1300000000000000000000000000000 | 150 34 STREET         | B       | PARK  | 20100106000000.00000 | 307        | 38         | B-07       | D'Eemic Playground                  | 100004733.00000000000000000000000 | B210B      | {BFD91324-49C1-46B5-B3E9-E43A989DC40B} | DPR        | 3 Ave. bet. 35 St. and 34 St.                                 | True   | D'Emic Playground               | 51         | 25         | 5465.0000000000000000000000000000 | B210B     | B-07     | Y      | B-07       | B-07       | Yes        | 72       | False   | D'Emic Playground               | Neighborhood Plgd          | Playground                  | http://www.nycgovparks.org/parks/B210B/ | 7          | No         | 11232   | 01060000000100000001030000000100000007000000D5B71BAF4C8052C0B95A3A92F2534440CB86F89C508052C0B75A6428EB53444087D285D45A8052C060EA5F80F75344405BCA5836538052C0C5EFBB01065444409D0CB838468052C0583B544DF6534440A3E30EF3498052C0A190BB44EF534440D5B71BAF4C8052C0B95A3A92F2534440
+   4 | 20100517000000.00000 | 2.1600000000000000000000000000000 | 201/125 BOLTON AVENUE | X       | PARK  | 20100106000000.00000 | 209        | 18         | X-09       | Harding Park                        | 100004033.00000000000000000000000 | X262       | {BDFFC8B5-573A-4771-8E51-601D03705C78} | DPR        | Bolton Ave. bet. O'Brien Ave. and G St.                       | False  | Harding Park                    | 85         | 34         | 4857.0000000000000000000000000000 | X262      | X-09     | Y      | X-09       | X-09       | Yes        | 43       | False   | Harding Park                    | Neighborhood Plgd          | Neighborhood Park           | http://www.nycgovparks.org/parks/X262/  | 15         | No         | 10473   | 010600000002000000010300000001000000070000005C0C553CCF7652C06ED2DF5B95674440294D0A20D57652C0F8A219DF936744403553CD0BDA7652C0F755869EBD674440976C42C1D97652C01C1D19B3BD674440CCFEACD6DA7652C0AF0B98E4C667444003646065D57652C0CCDE9348C96744405C0C553CCF7652C06ED2DF5B95674440010300000001000000060000000B02A90BCA7652C001010542656744407A278CBECF7652C0D040B5B26367444008BA74C7D37652C0307FFA8F866744401F238C55D27652C0E1C82D9988674440CAFDA543CE7652C011EF5BB6896744400B02A90BCA7652C00101054265674440
+   5 | 19550427000000.00000 | 1.1040000000000000000000000000000 | 4522 CARPENTER AVENUE | X       | PARK  | 20100106000000.00000 | 212        | 11         | X-12       | Wakefield Playground                | 100004702.00000000000000000000000 | X188       | {E33C24CE-ACEB-4018-BAF0-3CE447C8A2AF} | DPR/DOE    | Matilda Ave. to Carpenter Ave. bet. E. 239 St. and E. 240 St. | False  | Wakefield Playground            | 81         | 36         | 6621.0000000000000000000000000000 | X188      | X-12     | Y      | X-12       | X-12       | Yes        | 47       | False   | Wakefield Playground            | JOP                        | Jointly Operated Playground | http://www.nycgovparks.org/parks/X188/  | 16         | No         | 10470   | 0106000000020000000103000000010000000A0000006A82F17AAA7652C0AFF24C9F70734440E69E2BE0B07652C07F41ADB160734440F5FF4323B17652C008293E04617344402222891EB17652C0CCB2A00061734440B42BE288B57652C0737683976673444041657A9EB67652C0924470E367734440530ADE04BA7652C05CFB2CF46B7344402084E540BA7652C03BAEF13B6C734440148FD4BFB47652C0A67863F8797344406A82F17AAA7652C0AFF24C9F7073444001030000000100000005000000126A13C5A27652C0C2FE43D383734440B4CD448CA57652C0B17F07E87C73444046363CC1AA7652C0747D015281734440152DF7E9A77652C096FE0C8288734440126A13C5A27652C0C2FE43D383734440
+(5 rows)
+	
+	
 The final table centers on all parks in New York City.This geocoded polygon dataset contains information pertaining to all of the parks in
 	New York City. This contains primarily political information including the parks’ senate_nys [Senate district(?)], councils, and
 	Congressional districts. There is also a column dedicated to whether or not the park borders a waterfront, which may affect squirrel
@@ -55,6 +80,7 @@ The final table centers on all parks in New York City.This geocoded polygon data
    <summary>
   Squirrel Data Table
   </summary>
+	
 Squirrel Data is a 16-columned table is similar to the above table in its observations of squirrels. It is less normalized, as many
 	of the cells contain multiple pieces of information including a list of squirrel activities instead of the TRUE/FALSE style 
 	of Squirrel Sightings. The geometry of this dataset is points. The temporal component of this data collection is unknown, but 
@@ -68,6 +94,20 @@ Squirrel Data is a 16-columned table is similar to the above table in its observ
    <summary>
   Squirrel Sightings Table
   </summary>
+	
+ gid |       x        |       y       |   unique_squ   | hectare | shift |   date   |     hectare_sq      |  age  | primary_fu | highlight_ |   combinatio   |                                      color_note                                       |   location   | above_grou |  specific_l   | running | chasing | climbing | eating | foraging | other_acti | kuks | quaas | moans | tail_flags | tail_twitc | approaches | indifferen | runs_from | other_inte |                    geom                 
+-----|----------------|---------------|----------------|---------|-------|----------|---------------------|-------|------------|------------|----------------|---------------------------------------------------------------------------------------|--------------|------------|---------------|---------|---------|----------|--------|----------|------------|------|-------|-------|------------|------------|------------|------------|-----------|------------|--------------------------------------------
+   1 | -73.9561344938 | 40.7940823884 | 37F-PM-1014-03 | 37F     | PM    | 10142018 | 3.00000000000000000 |       |            |            | +              |                                                                                       |              |            |               |       0 |       0 |        0 |      0 |        0 |            |    0 |     0 |     0 |          0 |          0 |          0 |          0 |         0 |            | 0101000000E258BB4E317D52C0B245E07DA4654440
+   2 | -73.9688574691 | 40.7837825208 | 21B-AM-1019-04 | 21B     | AM    | 10192018 | 4.00000000000000000 |       |            |            | +              |                                                                                       |              |            |               |       0 |       0 |        0 |      0 |        0 |            |    0 |     0 |     0 |          0 |          0 |          0 |          0 |         0 |            | 01010000001314C2C2017E52C0001A53FC52644440
+   3 | -73.9742811485 | 40.7755336191 | 11B-PM-1014-08 | 11B     | PM    | 10142018 | 8.00000000000000000 |       | Gray       |            | Gray+          |                                                                                       | Above Ground | 10         |               |       0 |       1 |        0 |      0 |        0 |            |    0 |     0 |     0 |          0 |          0 |          0 |          0 |         0 |            | 01010000009D76519F5A7E52C07B7485AF44634440
+   4 | -73.9596413904 | 40.7903128889 | 32E-PM-1017-14 | 32E     | PM    | 10172018 |       14.0000000000 | Adult | Gray       |            | Gray+          | Nothing selected as Primary. Gray selected as Highlights. Made executive adjustments. |              |            |               |       0 |       0 |        0 |      1 |        1 |            |    0 |     0 |     0 |          0 |          0 |          0 |          0 |         1 |            | 01010000008DE8B8C36A7D52C0FEB805F928654440
+   5 | -73.9702676473 | 40.7762126855 | 13E-AM-1017-05 | 13E     | AM    | 10172018 | 5.00000000000000000 | Adult | Gray       | Cinnamon   | Gray+Cinnamon  |                                                                                       | Above Ground |            | on tree stump |       0 |       0 |        0 |      0 |        1 |            |    0 |     0 |     0 |          0 |          0 |          0 |          0 |         0 |            | 0101000000AA5679DD187E52C06A75F1EF5A634440
+   6 | -73.9683613516 | 40.7725908847 | 11H-AM-1010-03 | 11H     | AM    | 10102018 | 3.00000000000000000 | Adult | Cinnamon   | White      | Cinnamon+White |                                                                                       |              |            |               |       0 |       0 |        0 |      0 |        1 |            |    0 |     0 |     0 |          0 |          1 |          0 |          1 |         0 |            | 010100000075FBE3A1F97D52C022981342E4624440
+   7 | -73.9541201790 | 40.7931811701 | 36H-AM-1010-02 | 36H     | AM    | 10102018 | 2.00000000000000000 | Adult | Gray       |            | Gray+          | just outside hectare                                                                  | Ground Plane | FALSE      |               |       0 |       0 |        0 |      0 |        1 |            |    0 |     0 |     0 |          0 |          0 |          0 |          0 |         0 |            | 0101000000EB4A154E107D52C078B5E8F586654440
+   8 | -73.9582694312 | 40.7917367820 | 33F-AM-1008-02 | 33F     | AM    | 10082018 | 2.00000000000000000 | Adult | Gray       |            | Gray+          |                                                                                       | Ground Plane | FALSE      |               |       0 |       0 |        0 |      0 |        1 |            |    0 |     0 |     0 |          0 |          0 |          0 |          1 |         0 |            | 01010000009EF84E49547D52C07FEB80A157654440
+   9 | -73.9674285955 | 40.7829723920 | 21C-PM-1006-01 | 21C     | PM    | 10062018 | 1.00000000000000000 | Adult | Gray       |            | Gray+          |                                                                                       | Ground Plane | FALSE      |               |       0 |       0 |        0 |      0 |        0 |            |    0 |     0 |     0 |          1 |          1 |          0 |          0 |         0 |            | 0101000000DEC0A059EA7D52C0B899787038644440
+  10 | -73.9722500197 | 40.7742879599 | 11D-AM-1010-03 | 11D     | AM    | 10102018 | 3.00000000000000000 | Adult | Gray       | Cinnamon   | Gray+Cinnamon  |                                                                                       | Above Ground | 30         |               |       0 |       0 |        1 |      0 |        0 | grooming   |    0 |     0 |     0 |          0 |          0 |          0 |          1 |         0 |            | 01010000001C852558397E52C0EFBB2CDE1B634440
+
 	
 Squirrel Sightings contains the  number of squirrels observed primarily in Central Park, New York City throughout October 2018. 
 	It has about 31 rows. One cohort of rows pertains to the geographic whereabouts of the squirrels. Another section is dedicated
@@ -84,6 +124,42 @@ Milestone 2: Normalization
   </h2>
   
   ![normalsqrls](https://user-images.githubusercontent.com/128807596/227696480-e0c1d53c-51d9-40b8-ab41-5d5f6e1d27a7.jpeg)
+
+  <details>
+   <summary>
+	   <h3> The Entire Normalization Script </h3>
+  </summary>
+  </details>
+
+  <details>
+   <summary>
+  Ages Table
+  </summary>
+	
+	~~~~postgresql
+	CREATE TABLE "ages" (
+		"id" serial,
+		"age" character varying(10),
+		PRIMARY KEY ("id")
+		);
+	
+	INSERT INTO ages(age) 
+	SELECT DISTINCT age 
+	FROM squirrel_sightings1 
+	WHERE age is not null;
+	
+	SELECT * FROM ages;
+	
+	~~~~
+	
+ id |   age
+----|----------
+  1 | ?
+  2 | Adult
+  3 | Juvenile
+	
+	
+  </details>
 
   <details>
    <summary>
@@ -109,8 +185,18 @@ Milestone 2: Normalization
 		select distinct area_id, 
 		area_name
 		from  park_data;
-	
+	SELECT * FROM areas;
 	~~~~
+	
+
+
+ area_id |       name
+---------|-------------------
+ A       | UPPER MANHATTAN
+ D       | BROOKLYN
+ B       | CENTRAL MANHATTAN
+ C       | LOWER MANHATTAN
+	
   </details>
 
   <details>
@@ -148,6 +234,37 @@ Milestone 2: Normalization
 		FROM nyc_parks1;
 	
 	~~~~
+	
+  </details>
+
+  <details>
+   <summary>
+  Colors Table
+  </summary>
+	
+	~~~~postgresql
+	
+	  CREATE TABLE "colors" (
+			"id" serial,
+			"color" character varying(10),
+			PRIMARY KEY ("id")
+ 			);
+	
+	INSERT INTO colors(color) 
+	SELECT DISTINCT primary_fu 
+	FROM squirrel_sightings1 
+	WHERE primary_fu IS NOT NULL;
+
+	SELECT * FROM colors;
+	
+	~~~~
+	
+ id |  color
+----|----------
+  1 | Gray
+  2 | Black
+  3 | Cinnamon
+	
 	
   </details>
 
