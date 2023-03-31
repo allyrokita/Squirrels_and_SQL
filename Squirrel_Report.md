@@ -483,9 +483,164 @@ from nyc_parks1;
   
  <details>
    <summary>
-  Squirrel Data Table
+  Squirrel Data Table DRAFT
   </summary>
-  </details>
+	
+Start by altering the squirrel activities and vocalizations into booleans.
+	
+	~~~~postgresql
+	
+	ALTER TABLE squirrel_sightings1
+	ALTER COLUMN kuks TYPE boolean USING (kuks :: boolean)
+	ALTER COLUMN running type boolean using (running :: boolean),
+	ALTER COLUMN chasing TYPE boolean USING (chasing :: boolean),
+	ALTER COLUMN climbing TYPE boolean USING (climbing :: boolean),
+	ALTER COLUMN eating TYPE boolean USING (eating :: boolean),
+	ALTER COLUMN foraging TYPE boolean USING (foraging :: boolean),
+	ALTER COLUMN quaas TYPE boolean USING (quaas :: boolean),
+	ALTER COLUMN moans TYPE boolean USING (moans :: boolean),
+	ALTER COLUMN tail_flags TYPE boolean USING (tail_flags :: boolean),
+	ALTER COLUMN tail_twitc TYPE boolean USING (tail_twitc :: boolean),
+	ALTER COLUMN approaches TYPE boolean USING (approaches :: boolean),
+	ALTER COLUMN indifferen TYPE boolean USING (indifferen :: boolean),
+	ALTER COLUMN runs_from  TYPE boolean USING (runs_from  :: boolean);	
+	
+	~~~~
+	
+Next, it's time to insert the data from squdata into squirrel_sightings1.
+	
+	~~~~postgresql
+	INSERT INTO squirrel_sightings1 (
+		gid ,
+		x,
+		y,
+		unique_squ,
+		primary_fu,
+		highlight_,
+		color_note,
+		location,
+		above_grou,
+		running,
+		chasing,
+		climbing,
+		eating,
+		foraging,
+		kuks,
+		quaas,
+		moans,
+		tail_flags,
+		tail_twitc,
+		approaches,
+		indifferen,
+		runs_from,
+		geom)
+	SELECT 
+			gid+4000 AS fid,
+			squirrel_1 AS x,
+			squirrel_l AS y,
+			squirrel_i AS unique_squ,
+			primary_fu AS primary_color,
+			highlights,
+			color_note,
+			location,
+			--above ground?
+			--is squirrel above the ground (1) or on the ground plane (0)?
+			CASE 
+				WHEN split_part(LOWER(location), ',', 1) LIKE '%above ground%' THEN CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS above_ground,
+			--running
+			CASE 
+				WHEN split_part(LOWER(activities), ',', 1) LIKE '%running%' THEN CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS running,
+			--chasing
+			CASE 
+				WHEN split_part(LOWER(activities), ',', 1) LIKE '%chasing%' then CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS chasing ,
+			--climbing
+			CASE 
+				WHEN split_part(LOWER(activities), ',', 1) LIKE '%climbing%' THEN CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS climbing,
+
+			--eating
+			CASE 
+				WHEN split_part(LOWER(activities), ',', 1) LIKE '%eating%' THEN CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS eating,
+
+			CASE 
+				WHEN split_part(LOWER(activities), ',', 1) LIKE '%foraging%' THEN CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS foraging,
+			--was a kuk reported?
+			CASE
+				WHEN LOWER(activities) LIKE '%kuk%' THEN CAST(1 AS boolean)
+				WHEN LOWER(interactio) LIKE '%kuk%' THEN CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS kuk,
+			--quaa
+			CASE
+				WHEN LOWER(activities) LIKE '%quaa%' THEN CAST(1 AS boolean)
+				WHEN LOWER(interactio) LIKE '%quaa%' THEN CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS quaa,
+			--moan
+			CASE
+				WHEN LOWER(activities) LIKE '%moan%' THEN CAST(1 AS boolean)
+				WHEN LOWER(interactio) LIKE '%moan%' THEN CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS moan,
+			--tail flag
+			CASE
+				WHEN LOWER(activities) LIKE '%tail flag%' THEN CAST(1 AS boolean)
+				WHEN LOWER(interactio) LIKE '%tail flag%' THEN CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS tail_flag,
+			--tail_twitch 
+				CASE
+				WHEN LOWER(activities) LIKE '%tail twitch%' THEN CAST(1 AS boolean)
+				WHEN LOWER(interactio) LIKE '%tail twitch%' THEN CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS tail_twitch,	
+
+			-- approaches humans
+			CASE 
+				WHEN split_part(LOWER(interactio), ',', 1) LIKE '%approaches%' THEN CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS approaches,	
+			--indifferent interaction to humans
+			CASE 
+				WHEN split_part(LOWER(interactio), ',', 1) LIKE '%indifferent%' THEN CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS indifferent,
+			--runs away from
+			CASE 
+				WHEN split_part(LOWER(interactio), ',', 1) LIKE '%runs from%' THEN CAST(1 AS boolean)
+				ELSE CAST(0 AS boolean)
+			END AS run_from,
+			-- geom
+			geom
+	FROM squdata;
+	~~~~
+Here is a very selective sample of the table that we aggregated.
+	
+	~~~~postgresql
+	
+	SELECT * FROM squirrel_sightings1 WHERE gid =2015 OR gid = 1 or gid = 4341 or gid = 341 ORDER BY gid;
+	
+	~~~~
+	
+gid  |       x        |       y       |   unique_squ   | hectare | shift |   date   |     hectare_sq      |  age  | primary_fu |   highlight_    | combinatio | color_note |   location   | above_grou |       specific_l        | running | chasing | climbing | eating | foraging |      other_acti      | kuks | quaas | moans | tail_flags | tail_twitc | approaches | indifferen | runs_from |               other_inte                |                    geom
+------|----------------|---------------|----------------|---------|-------|----------|---------------------|-------|------------|-----------------|------------|------------|--------------|------------|-------------------------|---------|---------|----------|--------|----------|----------------------|------|-------|-------|------------|------------|------------|------------|-----------|-----------------------------------------|--------------------------------------------
+1 | -73.9561344938 | 40.7940823884 | 37F-PM-1014-03 | 37F     | PM    | 10142018 | 3.00000000000000000 |       |            |                 | +          |            |              |            |                         | f       | f       | f        | f      | f        |                      | f    | f     | f     | f          | f          | f          | f          | f         |                                         | 0101000000E258BB4E317D52C0B245E07DA4654440
+341 | -73.9605966636 | 40.7889849109 | 30E-AM-1008-01 | 30E     | AM    | 10082018 | 1.00000000000000000 | Adult | Gray       | White           | Gray+White |            | Ground Plane | FALSE      |                         | f       | f       | f        | f      | t        |                      | f    | f     | f     | f          | t          | f          | f          | t         | scurried into bushes when jogger ran by | 0101000000F8B96D6A7A7D52C039992275FD644440
+2015 | -73.9574365551 | 40.7886924675 | 31H-PM-1008-03 | 31H     | PM    | 10082018 | 3.00000000000000000 | Adult | Gray       |                 | Gray+      |            | Above Ground |            | no clue, way up a tree! | f       | f       | t        | f      | t        | throwing down acorns | f    | f     | f     | f          | f          | f          | f          | f         |                                         | 0101000000E902F9A3467D52C0A844F1DFF3644440
+4341 | -73.9523260000 | 40.7193760000 | D-22-44        |         |       |          |                     |       | Gray       | Cinnamon, White |            |            | Ground Plane | false      |                         | f       | f       | f        | f      | t        |                      | f    | f     | f     | f          | f          | f          | f          | t         |                                         | 01010000005848C0E8F27C52C088C34483145C4440	
+
+</details>
   
    <details>
    <summary>
