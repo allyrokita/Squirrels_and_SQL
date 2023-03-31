@@ -383,6 +383,8 @@ Milestone 2: Normalization
   </summary>
 
 Squirrel is one of the three fact tables in this dataset, so the process of normalizing this table starts at a dramatically different place from the look-up tables. First, one must aggregate squirrel_sightings1 and squdata into one table, as both tables represent the same entities, but were recorded in slightly different ways a couple years apart.
+	
+<h3> Agglomerate Squirrel Tables </h3>
 
 First, one must aggegrate the two squirrel tables into one. This exercise will funnel data into the squirrel_sightings1, as the data structure offers multiple choice instead of open response regarding squirrel activities and vocalizations. While some of the written open responses are absolutely delightful, the qualitative data makes it harder to analyze data in SQL. To combine the squirrel-centered tables together, one must begin by converting all of columns pertaining to squirrel activities in the squirrel_sightings1 table from the integer data type into boolean.
 	
@@ -404,10 +406,10 @@ First, one must aggegrate the two squirrel tables into one. This exercise will f
 	ALTER COLUMN runs_from  TYPE boolean USING (runs_from  :: boolean);
 	
 	~~~~
-Next we do other stuff (EDIT LATER)	
+Now, it is time to insert data from squdata into squirrel_sightings1. (EDIT LATER)	
 	
 	~~~~POSTGRESQL
-INSERT INTO squirrel_sightings1 (
+	INSERT INTO squirrel_sightings1 (
 		gid ,
 		x,
 		y,
@@ -523,6 +525,20 @@ INSERT INTO squirrel_sightings1 (
 	FROM squdata;
 	~~~~
 	
+<h3> First Normal Form </h3>
+
+Now that the squirrels tables are now one, it is time to normalize the table using the following demention tables:
+	
+	~~~~postgresql
+	
+	ALTER TABLE squirrel_sightings1 
+	DROP COLUMN hectare, --this study does not require hectare to be in it. 
+	DROP COLUMN hectare_sq,  -- this column was dependant on hectare
+	DROP COLUMN combinatio; --this data was composed of a combination of 
+				--primary_fu and highlights. It having multiple
+				--pieces of information in it made it so it violated 1NF. 
+	
+	~~~~
 	
 </details>
 
@@ -628,8 +644,10 @@ from nyc_parks1;
    <summary>
   Squirrel Data Table DRAFT
   </summary>
-	
-Start by altering the squirrel activities and vocalizations into booleans.
+
+### Agglomerate Squirrel Tables
+
+	Start by altering the squirrel activities and vocalizations into booleans.
 	
 	~~~~postgresql
 	
