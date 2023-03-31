@@ -379,8 +379,14 @@ Milestone 2: Normalization
 
 <details>
    <summary>
-  Squirrel Data Table
+  DRAFT Squirrel Table
   </summary>
+
+Squirrel is one of the three fact tables in this dataset, so the process of normalizing this table starts at a dramatically different place from the look-up tables. First, one must aggregate squirrel_sightings1 and squdata into one table, as both tables represent the same entities, but were recorded in slightly different ways a couple years apart.
+
+First 
+	
+	
 </details>
 
 <details>
