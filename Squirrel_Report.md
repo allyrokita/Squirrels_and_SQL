@@ -644,9 +644,89 @@ order by
    <summary>
   Outings Data Table
   </summary>
-  
-  
-  </details>
+ 	Outings is one of the three fact tables. In fact, it is the core of this database. 
+	
+<h3> Making the Table </h3>
+	
+	~~~~postgresql
+	
+	--Create Table
+	
+	CREATE table"outings" (
+	  "outing_id" SERIAL,
+	  "date" date,
+	  "start_time" time,
+	  "end_time" time,
+	  "park_id" character varying,
+	  "area_id" character(1),
+	  "condition_id" integer,
+	  "condition_desc" character varying,
+	  "litter_id" integer,
+	  "weather_id" integer,
+	  "weather_desc" character varying,
+	  "temp_id" integer,
+	  "group_id" character varying,
+	  PRIMARY KEY ("outing_id")
+	);
+
+	-- Populate Table
+	
+	insert into outings (
+	date,
+	area_id,
+	park_id,
+	start_time, 
+	end_time,
+	condition_desc,
+	litter_desc,
+	weather_desc)
+	select date,
+		area_id, 
+		park_id,
+		start_time :: TIME,
+		end_time :: TIME,
+		park_condition,
+		litter,
+		temp_and_weather
+	from park_data;
+	
+	--Let's see what the table looks like.
+	SELECT * FROM outings LIMIT 20;
+	
+	~~~~
+	
+	
+ outing_id |    date    | start_time | end_time | park_id | area_id | condition_id |                          condition_desc                          | litter_id |                            litter_desc                            | weather_id |              weather_desc               | temp_id | group_id
+-----------|------------|------------|----------|---------|---------|--------------|------------------------------------------------------------------|-----------|-------------------------------------------------------------------|------------|-----------------------------------------|---------|----------
+         1 | 2020-03-01 | 15:14:00   | 16:05:00 | 1       | A       |              | Busy                                                             |           | Some                                                              |            | 43 degrees, sunny                       |         |
+         2 | 2020-03-01 | 15:30:00   | 16:00:00 | 2       | A       |              | Calm                                                             |           | Some, in trees                                                    |            | cold, clear                             |         |
+         3 | 2020-03-01 | 15:21:00   | 16:15:00 | 3       | A       |              | Calm, pick-up baseball game                                      |           | Some, especially caught in wooded area in East, balloons in trees |            | 43 degrees                              |         |
+         4 | 2020-03-01 | 15:15:00   | 15:45:00 | 4       | A       |              | Calm                                                             |           | Some, backside of park                                            |            | 43 degrees, clear                       |         |
+         5 | 2020-03-01 | 15:15:00   | 15:45:00 | 5       | A       |              | Calm                                                             |           |                                                                   |            |                                         |         |
+         6 | 2020-03-01 | 15:45:00   | 16:15:00 | 6       | A       |              | Calm, re: humans, but a hawk is certainly not a calming presence |           | Abundant                                                          |            | 42 degrees, clear                       |         |
+         7 | 2020-03-01 | 14:30:00   | 15:50:00 | 7       | B       |              | Busy                                                             |           |                                                                   |            | 43 degrees, sunny                       |         |
+         8 | 2020-03-01 | 15:15:00   | 15:45:00 | 8       | B       |              | Busy                                                             |           |                                                                   |            | 40 degrees, sunny                       |         |
+         9 | 2020-03-01 | 15:00:00   | 16:00:00 | 9       | B       |              | Calm, 20èùû30 ppl on each side                                   |           | Some                                                              |            | 45 degrees, sunny                       |         |
+        10 | 2020-03-01 | 15:20:00   | 16:00:00 | 10      | B       |              | Busy                                                             |           | None                                                              |            | 45 degrees, sunny with shade spots      |         |
+        11 | 2020-03-01 | 15:15:00   | 15:45:00 | 11      | B       |              |                                                                  |           |                                                                   |            |                                         |         |
+        12 | 2020-03-01 | 15:01:00   | 15:45:00 | 12      | B       |              | Calm                                                             |           |                                                                   |            | windy, clear                            |         |
+        13 | 2020-03-01 | 15:30:00   | 16:00:00 | 13.1    | C       |              | Busy                                                             |           | Some                                                              |            | 44 degrees, sunny                       |         |
+        14 | 2020-03-01 | 15:30:00   | 16:00:00 | 13.2    | C       |              | Busy                                                             |           | Some                                                              |            | 43 degrees, sunny                       |         |
+        15 | 2020-03-01 | 15:25:00   | 15:55:00 | 14      | C       |              | Busy                                                             |           | Some                                                              |            | 40 degrees, sunny                       |         |
+        16 | 2020-03-01 | 15:35:00   | 16:15:00 | 15      | C       |              | Calm                                                             |           | Some, mostly in trees                                             |            | 48 degrees, sunny                       |         |
+        17 | 2020-03-01 | 15:47:00   | 16:38:00 | 16      | C       |              | Busy                                                             |           | None                                                              |            | 42 degrees, windy, dry, clear           |         |
+        18 | 2020-03-01 | 15:35:00   | 15:45:00 | 17      | C       |              | Calm                                                             |           | None                                                              |            | 42 degrees, windy, dry, clear           |         |
+        19 | 2020-03-01 | 15:37:00   | 16:00:00 | 18      | C       |              |                                                                  |           | Some                                                              |            | 43 degrees, sunny, with 20-30 mph gusts |         |
+        20 | 2020-03-01 | 15:34:00   | 16:04:00 | 19      | C       |              | Calm                                                             |           | None                                                              |            | 44 degrees, sunny                       |         |
+(20 rows)
+
+	Note the empty columns in this table. Unlike in Squirrel, the forgein key columns were made at the same time as the others in the pervious code blcok. 
+
+<h3> Normalization </h3>
+
+	
+	
+</details>
   
  <details>
    <summary>
