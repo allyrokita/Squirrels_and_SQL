@@ -4,8 +4,13 @@ A Geospatial Examination of Squirrel Behavior in PostgreSQL
   
  <img src="https://user-images.githubusercontent.com/128807596/227682101-0a9af0d3-e314-4ca7-981b-5a97c610b757.png"  width="400" height="550"> <img src="https://s1.dmcdn.net/v/BK6E-1Rmzb6KTOiUF/x1080"  width="540" height="550">
 
-"Margins decorated with border of foliate ornament and bunches of twigs, and inhabited by squirrel, wearing collar with lead attached to 
-ring on block on which the squirrel is seated, and by fantastic bird." 
+Squirrels have been a fascination to the human race for generations. It has inspired masterpieces ranging from this 15th century Dutch Catholic painting of a squirrel “wearing collar with lead attached to ring on block on which the squirrel is seated, and by fantastic bird,” to contemporary works such as Disney’s Squirrels in my Pants music video. 
+
+Squirrels and their quirky tendencies have brought much unadulterated joy to people. They have also evoked pathos through their struggles, poetically articulated by an anonymous squirrel enthusiast:
+
+>I saw the oldest and noblest struggle of all living things äóî all that live in a caste system, a hierarchy, a food chain äóî the rage of the oppressed majority backed into a corner by their tyrannical overlords. Two trees, two humble villages, two legions of squirrels, unwilling to yield to the fearsome, pompous hawk. Some stayed in the safety of the trunk, screaming warning and encouragement to those who, fed up with the order of the world and drawing their proverbial line in the sand, led creeping assaults on their antagonizer. One by one, they scuttled ever closer, tempting fate and their reflexes, some waiting until the raptor flashed its talons before scampering back out of reach. They came from the trunk. They came from the outer branches. They clung, upside down, inches from its head, as if re-enacting a scene from "Mission: Impossible" they were misremembering. Can you blame them?
+
+Thus, when  the Squirrel Census was conducted in New York City parks in 2018 and 2020, a beautiful albeit chaotic dataset was compiled. 
 
 <h2>
 Milestone 1: The Data
@@ -384,7 +389,8 @@ Milestone 2: Normalization
 
 Squirrel is one of the three fact tables in this dataset, so the process of normalizing this table starts at a dramatically different place from the look-up tables. First, one must aggregate squirrel_sightings1 and squdata into one table, as both tables represent the same entities, but were recorded in slightly different ways a couple years apart.
 	
-<h3> Agglomerate Squirrel Tables </h3>
+		
+	<h3> Agglomerate Squirrel Tables </h3>
 
 First, one must aggegrate the two squirrel tables into one. This exercise will funnel data into the squirrel_sightings1, as the data structure offers multiple choice instead of open response regarding squirrel activities and vocalizations. While some of the written open responses are absolutely delightful, the qualitative data makes it harder to analyze data in SQL. To combine the squirrel-centered tables together, one must begin by converting all of columns pertaining to squirrel activities in the squirrel_sightings1 table from the integer data type into boolean.
 	
@@ -525,21 +531,75 @@ Now, it is time to insert data from squdata into squirrel_sightings1. (EDIT LATE
 	FROM squdata;
 	~~~~
 	
-<h3> First Normal Form </h3>
+	
+<h3> Normalization </h3>
 
 Now that the squirrels tables are now one, it is time to normalize the table using the following demention tables:
 	
 	~~~~postgresql
 	
+	--Removing columns from the table.  
+	
 	ALTER TABLE squirrel_sightings1 
 	DROP COLUMN hectare, --this study does not require hectare to be in it. 
 	DROP COLUMN hectare_sq,  -- this column was dependant on hectare
-	DROP COLUMN combinatio; --this data was composed of a combination of 
-				--primary_fu and highlights. It having multiple
-				--pieces of information in it made it so it violated 1NF. 
+	DROP COLUMN combinatio; --this data was composed of a combination of primary_fu and highlights. 
+	
+	
 	
 	~~~~
+
+
+ gid |       x        |       y       |   unique_squ   | shift |   date   |  age  | primary_fu | highlight_ |                                      color_note                                       |   location   | above_grou | specific_l | running | chasing | climbing | eating | foraging | other_acti | kuks | quaas | moans | tail_flags | tail_twitc | approaches | indifferen | runs_from | other_inte |                    geom
+-----|----------------|---------------|----------------|-------|----------|-------|------------|------------|---------------------------------------------------------------------------------------|--------------|------------|------------|---------|---------|----------|--------|----------|------------|------|-------|-------|------------|------------|------------|------------|-----------|------------|--------------------------------------------
+   1 | -73.9561344938 | 40.7940823884 | 37F-PM-1014-03 | PM    | 10142018 |       |            |            |                                                                                       |              |            |            | f       | f       | f        | f      | f        |            | f    | f     | f     | f          | f          | f          | f          | f         |            | 0101000000E258BB4E317D52C0B245E07DA4654440
+   2 | -73.9688574691 | 40.7837825208 | 21B-AM-1019-04 | AM    | 10192018 |       |            |            |                                                                                       |              |            |            | f       | f       | f        | f      | f        |            | f    | f     | f     | f          | f          | f          | f          | f         |            | 01010000001314C2C2017E52C0001A53FC52644440
+   3 | -73.9742811485 | 40.7755336191 | 11B-PM-1014-08 | PM    | 10142018 |       | Gray       |            |                                                                                       | Above Ground | 10         |            | f       | t       | f        | f      | f        |            | f    | f     | f     | f          | f          | f          | f          | f         |            | 01010000009D76519F5A7E52C07B7485AF44634440
+   4 | -73.9596413904 | 40.7903128889 | 32E-PM-1017-14 | PM    | 10172018 | Adult | Gray       |            | Nothing selected as Primary. Gray selected as Highlights. Made executive adjustments. |              |            |            | f       | f       | f        | t      | t        |            | f    | f     | f     | f          | f          | f          | f          | t         |            | 01010000008DE8B8C36A7D52C0FEB805F928654440
+(4 rows)
+
 	
+	  ~~~~postgresql
+		--Normalizing Colors
+	
+		--insert the color_id into squirrel_sightings1 table
+
+		ALTER TABLE squirrel_sightings1
+		ADD primary_color integer;	
+		
+		-- populate new column with the color table's primary key
+	
+		UPDATE public.squirrel_sightings1 --format schema.table_name
+		SET 
+		primary_color = colors.id
+		FROM colors
+		WHERE squirrel_sightings1.primary_fu = colors.color;
+		
+		-- remove original column containing 
+		ALTER TABLE squirrel_sightings1
+		DROP primary_fu;
+	
+		--Normalizing Highlights
+		
+	
+		-- Normalizing Age
+		
+		--insert the age_id into table
+		ALTER TABLE squirrel_sightings1
+			ADD age_id integer;
+
+			-- populate new column with the color table's primary key
+			UPDATE public.squirrel_sightings1 --format schema.table_name
+			SET 
+			age_id = ages.id
+			FROM ages
+			WHERE squirrel_sightings1.age = ages.age;
+
+			ALTER TABLE squirrel_sightings1 
+			DROP age;
+	~~~~
+
+
 </details>
 
 <details>
@@ -642,166 +702,10 @@ from nyc_parks1;
   
  <details>
    <summary>
-  Squirrel Data Table DRAFT
+  DRAFT
   </summary>
 
-### Agglomerate Squirrel Tables
-
-	Start by altering the squirrel activities and vocalizations into booleans.
-	
-	~~~~postgresql
-	
-	ALTER TABLE squirrel_sightings1
-	ALTER COLUMN kuks TYPE boolean USING (kuks :: boolean)
-	ALTER COLUMN running type boolean using (running :: boolean),
-	ALTER COLUMN chasing TYPE boolean USING (chasing :: boolean),
-	ALTER COLUMN climbing TYPE boolean USING (climbing :: boolean),
-	ALTER COLUMN eating TYPE boolean USING (eating :: boolean),
-	ALTER COLUMN foraging TYPE boolean USING (foraging :: boolean),
-	ALTER COLUMN quaas TYPE boolean USING (quaas :: boolean),
-	ALTER COLUMN moans TYPE boolean USING (moans :: boolean),
-	ALTER COLUMN tail_flags TYPE boolean USING (tail_flags :: boolean),
-	ALTER COLUMN tail_twitc TYPE boolean USING (tail_twitc :: boolean),
-	ALTER COLUMN approaches TYPE boolean USING (approaches :: boolean),
-	ALTER COLUMN indifferen TYPE boolean USING (indifferen :: boolean),
-	ALTER COLUMN runs_from  TYPE boolean USING (runs_from  :: boolean);	
-	
-	~~~~
-	
-Next, it's time to insert the data from squdata into squirrel_sightings1.
-	
-	~~~~postgresql
-	INSERT INTO squirrel_sightings1 (
-		gid ,
-		x,
-		y,
-		unique_squ,
-		primary_fu,
-		highlight_,
-		color_note,
-		location,
-		above_grou,
-		running,
-		chasing,
-		climbing,
-		eating,
-		foraging,
-		kuks,
-		quaas,
-		moans,
-		tail_flags,
-		tail_twitc,
-		approaches,
-		indifferen,
-		runs_from,
-		geom)
-	SELECT 
-			gid+4000 AS fid,
-			squirrel_1 AS x,
-			squirrel_l AS y,
-			squirrel_i AS unique_squ,
-			primary_fu AS primary_color,
-			highlights,
-			color_note,
-			location,
-			--above ground?
-			--is squirrel above the ground (1) or on the ground plane (0)?
-			CASE 
-				WHEN split_part(LOWER(location), ',', 1) LIKE '%above ground%' THEN CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS above_ground,
-			--running
-			CASE 
-				WHEN split_part(LOWER(activities), ',', 1) LIKE '%running%' THEN CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS running,
-			--chasing
-			CASE 
-				WHEN split_part(LOWER(activities), ',', 1) LIKE '%chasing%' then CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS chasing ,
-			--climbing
-			CASE 
-				WHEN split_part(LOWER(activities), ',', 1) LIKE '%climbing%' THEN CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS climbing,
-
-			--eating
-			CASE 
-				WHEN split_part(LOWER(activities), ',', 1) LIKE '%eating%' THEN CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS eating,
-
-			CASE 
-				WHEN split_part(LOWER(activities), ',', 1) LIKE '%foraging%' THEN CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS foraging,
-			--was a kuk reported?
-			CASE
-				WHEN LOWER(activities) LIKE '%kuk%' THEN CAST(1 AS boolean)
-				WHEN LOWER(interactio) LIKE '%kuk%' THEN CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS kuk,
-			--quaa
-			CASE
-				WHEN LOWER(activities) LIKE '%quaa%' THEN CAST(1 AS boolean)
-				WHEN LOWER(interactio) LIKE '%quaa%' THEN CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS quaa,
-			--moan
-			CASE
-				WHEN LOWER(activities) LIKE '%moan%' THEN CAST(1 AS boolean)
-				WHEN LOWER(interactio) LIKE '%moan%' THEN CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS moan,
-			--tail flag
-			CASE
-				WHEN LOWER(activities) LIKE '%tail flag%' THEN CAST(1 AS boolean)
-				WHEN LOWER(interactio) LIKE '%tail flag%' THEN CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS tail_flag,
-			--tail_twitch 
-				CASE
-				WHEN LOWER(activities) LIKE '%tail twitch%' THEN CAST(1 AS boolean)
-				WHEN LOWER(interactio) LIKE '%tail twitch%' THEN CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS tail_twitch,	
-
-			-- approaches humans
-			CASE 
-				WHEN split_part(LOWER(interactio), ',', 1) LIKE '%approaches%' THEN CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS approaches,	
-			--indifferent interaction to humans
-			CASE 
-				WHEN split_part(LOWER(interactio), ',', 1) LIKE '%indifferent%' THEN CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS indifferent,
-			--runs away from
-			CASE 
-				WHEN split_part(LOWER(interactio), ',', 1) LIKE '%runs from%' THEN CAST(1 AS boolean)
-				ELSE CAST(0 AS boolean)
-			END AS run_from,
-			-- geom
-			geom
-	FROM squdata;
-	~~~~
-Here is a very selective sample of the table that we aggregated.
-	
-	~~~~postgresql
-	
-	SELECT * FROM squirrel_sightings1 WHERE gid =2015 OR gid = 1 or gid = 4341 or gid = 341 ORDER BY gid;
-	
-	~~~~
-	
-gid  |       x        |       y       |   unique_squ   | hectare | shift |   date   |     hectare_sq      |  age  | primary_fu |   highlight_    | combinatio | color_note |   location   | above_grou |       specific_l        | running | chasing | climbing | eating | foraging |      other_acti      | kuks | quaas | moans | tail_flags | tail_twitc | approaches | indifferen | runs_from |               other_inte                |                    geom
-------|----------------|---------------|----------------|---------|-------|----------|---------------------|-------|------------|-----------------|------------|------------|--------------|------------|-------------------------|---------|---------|----------|--------|----------|----------------------|------|-------|-------|------------|------------|------------|------------|-----------|-----------------------------------------|--------------------------------------------
-1 | -73.9561344938 | 40.7940823884 | 37F-PM-1014-03 | 37F     | PM    | 10142018 | 3.00000000000000000 |       |            |                 | +          |            |              |            |                         | f       | f       | f        | f      | f        |                      | f    | f     | f     | f          | f          | f          | f          | f         |                                         | 0101000000E258BB4E317D52C0B245E07DA4654440
-341 | -73.9605966636 | 40.7889849109 | 30E-AM-1008-01 | 30E     | AM    | 10082018 | 1.00000000000000000 | Adult | Gray       | White           | Gray+White |            | Ground Plane | FALSE      |                         | f       | f       | f        | f      | t        |                      | f    | f     | f     | f          | t          | f          | f          | t         | scurried into bushes when jogger ran by | 0101000000F8B96D6A7A7D52C039992275FD644440
-2015 | -73.9574365551 | 40.7886924675 | 31H-PM-1008-03 | 31H     | PM    | 10082018 | 3.00000000000000000 | Adult | Gray       |                 | Gray+      |            | Above Ground |            | no clue, way up a tree! | f       | f       | t        | f      | t        | throwing down acorns | f    | f     | f     | f          | f          | f          | f          | f         |                                         | 0101000000E902F9A3467D52C0A844F1DFF3644440
-4341 | -73.9523260000 | 40.7193760000 | D-22-44        |         |       |          |                     |       | Gray       | Cinnamon, White |            |            | Ground Plane | false      |                         | f       | f       | f        | f      | t        |                      | f    | f     | f     | f          | f          | f          | f          | t         |                                         | 01010000005848C0E8F27C52C088C34483145C4440	
-
-</details>
+  
   
    <details>
    <summary>
@@ -880,59 +784,8 @@ Milestone 5: Discussion
 }" alt="Alternate Text" />
 </a>
 
-<details>
-<summary>My top languages</summary>
-
-| Rank | Languages |
-|-----:|-----------|
-|     1| Python    |
-|     2| SQL       |
-|     3| R         |
-
-</details>
-
-<details>
-<summary> List of Relations Test </summary>
- 
-| Rank | Languages |
-|-----:|-----------|
-|     1| Python    |
-|     2| SQL       |
-|     3| R         |
-</details>
-
-<details>
-<summary>Data Used </summary>
- 
- Schema |        Name         | Type  | Description  |
--------:|---------------------|-------|--------------|
- public | animals             | table |              |
- public | areas               | table |              |
- public | nyc_parks           | table |              |
- public | nyc_parks1          | table |              |
- public | outings             | table |              |
- public | park_data           | table |              |
- public | sighter_groups      | table |              |
- public | spatial_ref_sys     | table |              |
- public | squdata             | table |              |
- public | squirrel_data       | table |              |
- public | squirrel_sightings  | table |              |
- public | squirrel_sightings1 | table |              |
- 
-    <details>
-      <summary> Outings </summary>
-      
-  </details>
-</details>
-
-
-<table border="0">
- <tr>
-    <td><b style="font-size:30px">Title</b></td>
-    <td><b style="font-size:30px">Title 2</b></td>
- </tr>
- <tr>
-    <td>Lorem ipsum ...</td>
-    <td>Lorem ipsum ...</td>
- </tr>
-</table>
+<h2 style="text-align: center;">
+References
+  </h2>
+  
+  ![Copy of Open Source Shakespeare ERD - Page 3](https://user-images.githubusercontent.com/128807596/229255637-4336c68c-273b-4332-87de-606363a52ecd.jpeg)
