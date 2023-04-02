@@ -91,7 +91,7 @@ Squirrel Data is a 16-columned table is similar to the above table in its observ
 	of Squirrel Sightings. The geometry of this dataset is points. The temporal component of this data collection is unknown, but 
 	the geographic diversity (the data spans across many parks in New York City) make it a valuable dataset. The data hails from 
 	New York City’s Department of Data via (https://www.thesquirrelcensus.com/ ). It was created with data compiled primarily from
-	March 2020 via the Squirrel Census Phone Tree across 24 parks. The research team consisted of many nameless volunteers. 
+	March 2020 via the Squirrel Census Phone Tree across 24 parks. The research team consisted of many nameless volunteers. Throughout the script, it shall be 	referred to as squadata. 
 
   </details>
   
@@ -128,7 +128,11 @@ Squirrel Sightings contains the  number of squirrels observed primarily in Centr
 Milestone 2: Normalization
   </h2>
   
-  ![normalsqrls](https://user-images.githubusercontent.com/128807596/227696480-e0c1d53c-51d9-40b8-ab41-5d5f6e1d27a7.jpeg)
+   ![Copy of Open Source Shakespeare ERD - Page 3](https://user-images.githubusercontent.com/128807596/229255637-4336c68c-273b-4332-87de-606363a52ecd.jpeg)
+  
+  ![Copy of Open Source Shakespeare ERD - Copy of Copy of Normalization_Draft1 (1)](https://user-images.githubusercontent.com/128807596/229326813-6236a5fa-49ca-428a-96cd-49720388ae0d.jpeg)
+
+  
 
   <details>
    <summary>
@@ -720,10 +724,56 @@ order by
         20 | 2020-03-01 | 15:34:00   | 16:04:00 | 19      | C       |              | Calm                                                             |           | None                                                              |            | 44 degrees, sunny                       |         |
 (20 rows)
 
-	Note the empty columns in this table. Unlike in Squirrel, the forgein key columns were made at the same time as the others in the pervious code blcok. 
+Note the empty columns in this table. Unlike in Squirrel, the forgein key columns were made at the same time as the others in the pervious code blcok. 
 
 <h3> Normalization </h3>
 
+	~~~~postgresql
+	-- Insert litter_id into Outings
+	
+	UPDATE public.outings --format schema.table_name
+	SET 
+	litter_id = litter.litter_id :: integer
+	FROM litter
+	WHERE split_part(outings.litter_desc, ',',1) = litter.name;
+	
+	/* Unfortunately, there is not enough time to normalize the open responses at this time. So details about where the litter was located will be
+	tabled for another time. For now, the descriptions of the litter shall be dropped. */
+	
+	ALTER TABLE outings
+	DROP litter_desc ;
+	
+	-- Insert conditions_id into Outings
+		UPDATE public.outings --format schema.table_name
+		SET 
+		condition_id = conditions.condition_id :: integer
+		FROM conditions
+		WHERE split_part(split_part(condition_desc,'-',1),',',1) = conditions.name;
+	
+		/* There is not enough time to normalize the open responses of the park conditions. A formal apology specifically to 7-year-old Hank,
+		whose commentary throughout the database has brought much insight and delight. */
+		ALTER TABLE outings
+		DROP condition_desc ;
+	
+	--Extract the temperature from the Weather column and insert it into its own column, temp_fahrenheit
+		ALTER TABLE outings 
+		ADD COLUMN temp_fahrenheit integer;
+
+		UPDATE public.outings --format schema.table_name
+		SET 
+		temp_fahrenheit = split_part(split_part(split_part(weather_desc , ',', 1), ' ', 1), '-', 1) :: integer
+		WHERE weather_desc  LIKE '%1%'  
+		or weather_desc  like '%2%'
+		or weather_desc like '%3%'
+		or weather_desc  like '%4%'
+		or weather_desc  like '%5%'
+		or weather_desc  like '%6%'
+		or weather_desc  like '%7%'
+		or weather_desc  like '%8%'
+		or weather_desc  like '%9%'
+		or weather_desc  like '%0%';
+	
+	~~~~
 	
 	
 </details>
@@ -851,21 +901,67 @@ Milestone 3: The Script
 
 
   
-<h2 style="text-align: center;">
-Milestone 4: Optimization
-  </h2>
  
 <h2 style="text-align: center;">
 Milestone 5: Discussion
   </h2>
  
-  <img src="{![image]([
+<details>	
+<summary>
+<h2 style="text-align: center;">
+Appendix A: Loading the Data
+  </h2>
+<details>	
+	
+1. Activate PostGIS Shapefile Import/Export Manager
+
+	![image](https://user-images.githubusercontent.com/128807596/229322820-64f63052-2c85-49b7-a432-489bde334a4a.png)
+
+2. Click on "View Connection Details..." and enter in credentials.
+
+	![image](https://user-images.githubusercontent.com/128807596/229322844-b0bacd1e-ec13-4a0e-b5df-e4157c15c6a3.png)
+
+3. Next, press "Add File," and select the three shapefiles: squdata, squirrel_sightings1, and nyc_parks1.
+
+	![image](https://user-images.githubusercontent.com/128807596/229323328-c6d31d67-6a4e-4c98-af73-85289d79db66.png)
+
+	
+4. Use the Start menu t activate SQL Shell (psql). Enter credentials.
+	
+5. Next, connect to the database via the \c database_name command.
+	
+6. Once connected, type CREATE EXTENSION POSTGIS;
+	
+	![image](https://user-images.githubusercontent.com/128807596/229323651-572f444a-3e70-41ce-8efe-67c171e3d0fd.png)
+
+7. Return to the PostGIS Shapefile Import/Export Manager window. Press "Import."
+	
+	![image](https://user-images.githubusercontent.com/128807596/229323691-eba9d5bf-c811-46f9-8bda-bbed2a96b987.png)
+	
+8. Copy the parks_data CSV into the database via 
+
+	</summary>
+	</details	 
+
+	<img src="{![image]([
 ](https://phineasandferb.fandom.com/wiki/S.I.M.P._(Squirrels_In_My_Pants)?file=S.I.M.P.jpg))
 }" alt="Alternate Text" />
 </a>
 
+<details>	
+<summary>
 <h2 style="text-align: center;">
 References
   </h2>
+
+Culross, M., Marsh, J., &amp; Povenmire, D. (2009). Phineas and Ferb. Squirrels In My Pants. YouTube. 
+	Retrieved April 1, 2023, from https://www.youtube.com/watch?v=OID7gA8fcaw. 
+
+"Margins decorated with border of foliate ornament and bunches of twigs, and inhabited by squirrel, wearing collar with lead attached to ring on block on which the 	squirrel is seated, and by fantastic bird.". (n.d.). The Morgan Library and Museum. 
+	Retrieved April 1, 2023, from http://ica.themorgan.org/manuscript/page/9/76938. 	
+
+	</summary>
+	</details
+	
   
   ![Copy of Open Source Shakespeare ERD - Page 3](https://user-images.githubusercontent.com/128807596/229255637-4336c68c-273b-4332-87de-606363a52ecd.jpeg)
